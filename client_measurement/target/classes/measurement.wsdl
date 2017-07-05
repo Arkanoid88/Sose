@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="MeasurementService"
+	targetNamespace="http://it.univaq.disim.sose.hes/measurement" 
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsp="http://www.w3.org/ns/ws-policy" 
+	xmlns:tns="http://it.univaq.disim.sose.hes/measurement"
+	xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata">
+	<types>
+		<xsd:schema targetNamespace="http://it.univaq.disim.sose.hes/measurement">
+			<xsd:element name="measurementRequest" type="tns:measurementRequest" />
+			<xsd:element name="measurementResponse" type="tns:measurementResponse" />
+			<xsd:complexType name="measurementRequest">
+				<xsd:sequence>
+					<xsd:element name="ID" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="measurementResponse">
+				<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="measurements" type="tns:MeasurementType" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="MeasurementType">
+				<xsd:sequence>
+					<xsd:element name="idPatient" type="xsd:int" />
+					<xsd:element name="measurementInfo" minOccurs="1" type="tns:measurementInfoType" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="measurementInfoType">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string" />
+					<xsd:element name="lastUpdate" type="xsd:string" />
+					<xsd:element name="description" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+	</types>
+	<message name="measurementRequest">
+		<part name="parameters" element="tns:measurementRequest">
+		</part>
+	</message>
+	<message name="measurementResponse">
+		<part name="parameters" element="tns:measurementResponse">
+		</part>
+	</message>
+	<portType name="MeasurementPT">
+		<operation name="measurement">
+			<input message="tns:measurementRequest"
+				wsam:Action="http://it.univaq.disim.sose.hes/measurement/measurementRequest">
+			</input>
+			<output message="tns:measurementResponse"
+				wsam:Action="http://it.univaq.disim.sose.hes/measurement/measurementResponse">
+			</output>
+		</operation>
+	</portType>
+	<binding name="MeasurementBinding" type="tns:MeasurementPT">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="measurement">
+			<soap:operation soapAction="" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+	<service name="MeasurementService">
+		<port name="MeasurementPort" binding="tns:MeasurementBinding">
+			<soap:address location="http://localhost:6060/measurement/services/measurement" />
+		</port>
+	</service>
+</definitions>
