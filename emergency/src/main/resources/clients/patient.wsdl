@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<definitions name="PatientService"
+	targetNamespace="http://it.univaq.disim.sose.hes/patient" 
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsp="http://www.w3.org/ns/ws-policy" 
+	xmlns:tns="http://it.univaq.disim.sose.hes/patient"
+	xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata">
+	
+	<types>
+	
+		<xsd:schema targetNamespace="http://it.univaq.disim.sose.hes/patient">
+			<xsd:element name="patientInfoRequest" type="tns:patientInfoRequest" />
+			<xsd:element name="patientInfoResponse" type="tns:patientInfoResponse" />
+			<xsd:complexType name="PatientType">
+				<xsd:sequence>
+					<xsd:element name="id" type="xsd:int" />
+					<xsd:element name="name" type="xsd:string" />
+					<xsd:element name="description" type="xsd:string" />
+					<xsd:element name="pathologies" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="addressType">
+			  			<xsd:sequence>
+			    		<xsd:element name="street" type="xsd:string"/>
+			    		<xsd:element name="city" type="xsd:string"/>
+			    		<xsd:element name="country" type="xsd:string"/>
+			  		</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="patientInfoRequest">
+				<xsd:all>
+					<xsd:element name="ID" type="xsd:int" />
+				</xsd:all>
+			</xsd:complexType>
+			<xsd:complexType name="patientInfoResponse">
+				<xsd:all>
+					<xsd:element name="patientinfo" type="tns:PatientType" />
+					<xsd:element name="address" type="tns:addressType" />
+				</xsd:all>
+			</xsd:complexType>
+		</xsd:schema>
+		
+	</types>	
+	
+	<message name="patientInfoRequest">
+		<part name="parameters" element="tns:patientInfoRequest"> </part>
+		</message>
+	<message name="patientInfoResponse">
+		<part name="parameters" element="tns:patientInfoResponse"> </part>
+		</message>
+	
+	<portType name="PatientPT">
+		<operation name="patientinfo">
+			<input message="tns:patientInfoRequest"
+				wsam:Action="http://it.univaq.disim.sose.hes/patient/patientinfo">
+			</input>
+			<output message="tns:patientInfoResponse"
+				wsam:Action="http://it.univaq.disim.sose.hes/patient/patientinfoResponse">
+			</output>
+		</operation>
+	</portType>
+		
+	<binding name="PatientBinding" type="tns:PatientPT">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="patientinfo">
+			<soap:operation soapAction="" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+	
+	<service name="PatientService">
+		<port name="PatientPort" binding="tns:PatientBinding">
+			<soap:address location="http://localhost:6060/patient/services/patient" />
+		</port>
+	</service>
+	
+	
+</definitions>

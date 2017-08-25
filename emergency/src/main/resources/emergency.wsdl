@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<definitions name="EmergencyService"
+        targetNamespace="http://it.univaq.disim.sose.hes/emergency"
+        xmlns:tns="http://it.univaq.disim.sose.hes/emergency"
+        xmlns="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <types>
+        <xsd:schema targetNamespace="http://it.univaq.disim.sose.hes/emergency">
+            <xsd:element name="getInfoRequestMessage" type="tns:getInfoRequest"/>
+         	<xsd:element name="getInfoResponseMessage" type="tns:getInfoResponse"/>
+	    
+		    <xsd:complexType name="getInfoRequest">
+		    				<xsd:sequence>
+					<xsd:element name="ID" type="xsd:int" />
+					<xsd:element name="ServiceId" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+            <xsd:complexType name="getInfoResponse">
+				<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="responseType" type="tns:responseType"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			
+			<xsd:complexType name="responseType">
+				<xsd:sequence>
+					<xsd:element name="MapsUrl" type="xsd:string"/>
+					<xsd:element name="responseInfoType" minOccurs="1" type="tns:responseInfoType" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="responseInfoType">
+				<xsd:sequence>
+					<xsd:element name="name" type="xsd:string" />
+					<xsd:element name="lastUpdate" type="xsd:string" />
+					<xsd:element name="description" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+        </xsd:schema>
+    </types>
+
+    <message name="getInfoRequestMessage">
+        <part name="parameters" element="tns:getInfoRequestMessage"/>
+    </message>
+    <message name="getInfoResponseMessage">
+        <part name="parameters" element="tns:getInfoResponseMessage"/>
+    </message>
+
+    <portType name="EmergencyPT">
+        <operation name="getInfo">
+            <input  message="tns:getInfoRequestMessage" />
+            <output message="tns:getInfoResponseMessage"/>
+        </operation>
+    </portType>   
+    
+    <binding name="EmergencyBinding" type="tns:EmergencyPT">
+    	<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    	<operation name="getInfo">
+    		<soap:operation soapAction="http://it.univaq.disim.sose.hes/emergency/getInfo" />    	
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    		<output>
+    			<soap:body use="literal" />
+    		</output>
+    	</operation>
+    </binding>
+
+    <service name="EmergencyService">
+    	<port name="EmergencyPort" binding="tns:EmergencyBinding">
+    		<soap:address location="http://localhost:6060/emergency/services/emergency" />
+    	</port>
+    </service>
+</definitions>
